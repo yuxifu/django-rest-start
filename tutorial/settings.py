@@ -83,18 +83,25 @@ WSGI_APPLICATION = 'tutorial.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
 # default to local Postgres database
+
+"""
+# How to set the default DB connection
+'ENGINE': 'django.db.backends.', # Add 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+'NAME': '',                      # DB name or path to database file if using sqlite3.
+# The following settings are not used with sqlite3:
+'USER': '',
+'PASSWORD': '',
+'HOST': '',                      # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
+'PORT': '',                      # Set to empty string for default.
+"""
+
 DATABASES = {
     'default': {
-        # 'ENGINE': 'django.db.backends.sqlite3',
-        # 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'django_test',
-        'USER': 'Django',
-        'PASSWORD': 'django',
-        'HOST': 'localhost'
+        # default to sqlite3
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators
@@ -129,7 +136,10 @@ USE_L10N = True
 USE_TZ = True
 
 # Update database configuration with $DATABASE_URL.
-db_from_env = dj_database_url.config(conn_max_age=500)
+# in production, set env variable DATABASE_URL = "postgres://user:password@host:port/database"
+# dj_database_url.config(default='postgres://user:password@host:port/database')
+db_from_env = dj_database_url.config(default='postgres://Django:django@localhost/django_test',
+                                     conn_max_age=500)
 DATABASES['default'].update(db_from_env)
 
 # Honor the 'X-Forwarded-Proto' header for request.is_secure()
