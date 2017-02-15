@@ -20,9 +20,9 @@ To use this project, follow these steps:
 3. Download this project.
 4. Run `python manage.py runserver` or `gunicorn tutorial.wsgi` to test.
 
-- API root: (http://localhost:8000/) 
-- Swagger: (http://localhost:8000/swagger/)
-- DRF doc: (http://localhost:8000/docs/)
+- API root: [http://localhost:8000/](http://localhost:8000/) 
+- Swagger: [http://localhost:8000/swagger/](http://localhost:8000/swagger/)
+- DRF doc: [http://localhost:8000/docs/](http://localhost:8000/docs/)
 
 ## Using Python 2.7?
 
