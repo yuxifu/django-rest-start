@@ -4,8 +4,8 @@ A starter project template to build a robust RESTful Web API using [Django REST 
 
 ## Features
 
-- Based on [Django REST framework official tutorial](http://www.django-rest-framework.org/tutorial/quickstart/)
-- Based on - Heroku [python-getting-started](https://github.com/heroku/python-getting-started)
+- Based on [Django REST framework official tutorial](http://www.django-rest-framework.org/tutorial/quickstart/).
+- Based on - Heroku [python-getting-started](https://github.com/heroku/python-getting-started).
 - Production-ready configuration for Static Files, Database Settings, Gunicorn, etc.
 - Enhancements to Django's static file serving functionality via WhiteNoise.
 - Latest Python 3.6 runtime environment. 
@@ -15,14 +15,14 @@ A starter project template to build a robust RESTful Web API using [Django REST 
 
 To use this project, follow these steps:
 
-1. Create your working environment.  See [Python](http://sourabhbajaj.com/mac-setup/Python/README.html)
+1. Create your working environment.  See [Set up Python](http://sourabhbajaj.com/mac-setup/Python/README.html).
 2. Install dependences using `pip`.  
 3. Download this project.
 4. Run `python manage.py runserver` or `gunicorn tutorial.wsgi` to test.
 
-- API root: http://localhost:8000/ 
-- Swagger: http://localhost:8000/swagger/
-- DRF doc: http://localhost:8000/docs/
+- API root: (http://localhost:8000/) 
+- Swagger: (http://localhost:8000/swagger/)
+- DRF doc: (http://localhost:8000/docs/)
 
 ## Using Python 2.7?
 
