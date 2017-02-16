@@ -9,16 +9,16 @@ from snippets import views
 
 # different ways to create API
 urlpatterns = [
-    url(r'^snippets0/$', views0.snippet_list),
-    url(r'^snippets0/(?P<pk>[0-9]+)/$', views0.snippet_detail),
-    url(r'^snippets1/$', views1.snippet_list),
-    url(r'^snippets1/(?P<pk>[0-9]+)$', views1.snippet_detail),
-    url(r'^snippets2/$', views2.SnippetList.as_view()),
-    url(r'^snippets2/(?P<pk>[0-9]+)/$', views2.SnippetDetail.as_view()),
-    url(r'^snippets3/$', views3.SnippetList.as_view()),
-    url(r'^snippets3/(?P<pk>[0-9]+)/$', views3.SnippetDetail.as_view()),
-    url(r'^snippets4/$', views4.SnippetList.as_view()),
-    url(r'^snippets4/(?P<pk>[0-9]+)/$', views4.SnippetDetail.as_view()),
+    url(r'^exp_snippets0/$', views0.snippet_list),
+    url(r'^exp_snippets0/(?P<pk>[0-9]+)/$', views0.snippet_detail),
+    url(r'^exp_snippets1/$', views1.snippet_list),
+    url(r'^exp_snippets1/(?P<pk>[0-9]+)/$', views1.snippet_detail),
+    url(r'^exp_snippets2/$', views2.SnippetList.as_view()),
+    url(r'^exp_snippets2/(?P<pk>[0-9]+)/$', views2.SnippetDetail.as_view()),
+    url(r'^exp_snippets3/$', views3.SnippetList.as_view()),
+    url(r'^exp_snippets3/(?P<pk>[0-9]+)/$', views3.SnippetDetail.as_view()),
+    url(r'^exp_snippets4/$', views4.SnippetList.as_view()),
+    url(r'^exp_snippets4/(?P<pk>[0-9]+)/$', views4.SnippetDetail.as_view()),
 ]
 
 # API endpoints

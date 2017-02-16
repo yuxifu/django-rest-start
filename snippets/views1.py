@@ -4,11 +4,13 @@ rest_framework_swagger: Get/Delete OK; POST/PUT doesn't show input data
 controls
 """
 from rest_framework import status
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
+from rest_framework import permissions
 
 from snippets.models import Snippet
 from snippets.serializers import SnippetSerializer
+from security.permissions import IsOwnerOrReadOnly
 
 # Request objects
 # REST framework introduces a Request object that extends the regular
@@ -26,17 +28,18 @@ from snippets.serializers import SnippetSerializer
 
 
 @api_view(['GET', 'POST'])
+@permission_classes((permissions.IsAuthenticatedOrReadOnly,))
 def snippet_list(request, format=None):
     """
     List all snippets, or create a new snippet.
     """
     if request.method == 'GET':
         snippets = Snippet.objects.all()
-        serializer = SnippetSerializer(snippets, many=True)
+        serializer = SnippetSerializer(snippets, context={'request': request}, many=True)
         return Response(serializer.data)
 
     elif request.method == 'POST':
-        serializer = SnippetSerializer(data=request.data)
+        serializer = SnippetSerializer(context={'request': request}, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -44,6 +47,7 @@ def snippet_list(request, format=None):
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
+@permission_classes((permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly,))
 def snippet_detail(request, pk, format=None):
     """
     Retrieve, update or delete a snippet instance.
@@ -54,11 +58,11 @@ def snippet_detail(request, pk, format=None):
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
-        serializer = SnippetSerializer(snippet)
+        serializer = SnippetSerializer(snippet, context={'request': request})
         return Response(serializer.data)
 
     elif request.method == 'PUT':
-        serializer = SnippetSerializer(snippet, data=request.data)
+        serializer = SnippetSerializer(snippet, context={'request': request}, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)

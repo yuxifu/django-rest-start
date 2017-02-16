@@ -5,10 +5,11 @@ rest_framework_swagger: not working
 from django.http import Http404, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.renderers import JSONRenderer
+from rest_framework import permissions
 
 from snippets.models import Snippet
 from snippets.serializers import SnippetSerializer
-
+from security.permissions import IsOwnerOrReadOnly
 
 class JSONResponse(HttpResponse):
     """
@@ -28,12 +29,12 @@ def snippet_list(request):
     """
     if request.method == 'GET':
         snippets = Snippet.objects.all()
-        serializer = SnippetSerializer(snippets, many=True)
+        serializer = SnippetSerializer(snippets, context={'request': request}, many=True)
         return JSONResponse(serializer.data)
 
     elif request.method == 'POST':
         data = JSONParser().parse(request)
-        serializer = SnippetSerializer(data=data)
+        serializer = SnippetSerializer(context={'request': request}, data=data)
         if serializer.is_valid():
             serializer.save()
             return JSONResponse(serializer.data, status=201)
@@ -51,12 +52,12 @@ def snippet_detail(request, pk):
         return HttpResponse(status=404)
 
     if request.method == 'GET':
-        serializer = SnippetSerializer(snippet)
+        serializer = SnippetSerializer(snippet, context={'request': request})
         return JSONResponse(serializer.data)
 
     elif request.method == 'PUT':
         data = JSONParser().parse(request)
-        serializer = SnippetSerializer(snippet, data=data)
+        serializer = SnippetSerializer(snippet, context={'request': request}, data=data)
         if serializer.is_valid():
             serializer.save()
             return JSONResponse(serializer.data)

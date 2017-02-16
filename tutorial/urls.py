@@ -18,9 +18,9 @@ from django.contrib import admin
 from rest_framework_swagger.views import get_swagger_view
 from rest_framework.schemas import get_schema_view
 
-swagger_view = get_swagger_view(title='Example API')
+swagger_view = get_swagger_view(title='Tutorial API')
 
-schema_view = get_schema_view(title='Example API')
+schema_view = get_schema_view(title='Tutorial API')
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -41,4 +41,7 @@ urlpatterns = [
 
     # App 'snippets'
     url(r'^', include('snippets.urls')),
+
+    # App 'experiments'
+    url(r'^', include('experiments.urls')),
 ]

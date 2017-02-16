@@ -15,12 +15,12 @@ from django.contrib.auth.models import User
 from snippets.models import Snippet
 from snippets.serializers import SnippetSerializer
 from snippets.serializers import UserSerializer
-from snippets.permissions import IsOwnerOrReadOnly
+from security.permissions import IsOwnerOrReadOnly
 
 
 class SnippetList(generics.ListCreateAPIView):
     """
-    Snippet List
+    List all code snippets, or create a new snippet.
     """
     queryset = Snippet.objects.all()
     serializer_class = SnippetSerializer
@@ -31,7 +31,7 @@ class SnippetList(generics.ListCreateAPIView):
 
 
 class SnippetDetail(generics.RetrieveUpdateDestroyAPIView):
-    """Snippet Detail"""
+    """Retrieve, update or delete a snippet instance."""
     queryset = Snippet.objects.all()
     serializer_class = SnippetSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,
@@ -39,13 +39,13 @@ class SnippetDetail(generics.RetrieveUpdateDestroyAPIView):
 
 
 class UserList(generics.ListAPIView):
-    """User List"""
+    """List all users."""
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
 
 class UserDetail(generics.RetrieveAPIView):
-    """User Detail"""
+    """List one user instance."""
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
@@ -60,7 +60,7 @@ def api_root(request, format=None):
 
 
 class SnippetHighlight(generics.GenericAPIView):
-    """Snippet Highlight"""
+    """Retrieve snippet highlight"""
     queryset = Snippet.objects.all()
     renderer_classes = (renderers.StaticHTMLRenderer,)
 
