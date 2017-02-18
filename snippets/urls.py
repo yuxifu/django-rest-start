@@ -22,8 +22,7 @@ urlpatterns = [
 ]
 
 # API endpoints
-urlpatterns += format_suffix_patterns([
-    url(r'^$', views.api_root),
+urlpatterns += [
     url(r'^snippets/$',
         views.SnippetList.as_view(),
         name='snippet-list'),
@@ -33,11 +32,13 @@ urlpatterns += format_suffix_patterns([
     url(r'^snippets/(?P<pk>[0-9]+)/highlight/$',
         views.SnippetHighlight.as_view(),
         name='snippet-highlight'),
-    url(r'^users/$',
+    url(r'^snippets/users/$',
         views.UserList.as_view(),
-        name='user-list'),
-    url(r'^users/(?P<pk>[0-9]+)/$',
+        name='snippets-user-list'),
+    url(r'^snippets/users/(?P<pk>[0-9]+)/$',
         views.UserDetail.as_view(),
-        name='user-detail')
-])
+        name='snippets-user-detail')
+]
 
+# support optional format suffixes
+urlpatterns = format_suffix_patterns(urlpatterns)

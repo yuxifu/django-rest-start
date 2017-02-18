@@ -5,7 +5,7 @@ controls
 """
 from rest_framework import generics
 from rest_framework import permissions
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework import renderers
@@ -42,27 +42,21 @@ class UserList(generics.ListAPIView):
     """List all users."""
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
 
 class UserDetail(generics.RetrieveAPIView):
     """List one user instance."""
     queryset = User.objects.all()
     serializer_class = UserSerializer
-
-
-@api_view(['GET'])
-def api_root(request, format=None):
-    """API Root"""
-    return Response({
-        'users': reverse('user-list', request=request, format=format),
-        'snippets': reverse('snippet-list', request=request, format=format)
-    })
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
 
 class SnippetHighlight(generics.GenericAPIView):
     """Retrieve snippet highlight"""
     queryset = Snippet.objects.all()
     renderer_classes = (renderers.StaticHTMLRenderer,)
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
     def get(self, request, *args, **kwargs):
         snippet = self.get_object()

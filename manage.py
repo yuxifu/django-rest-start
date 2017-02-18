@@ -2,6 +2,9 @@
 import os
 import sys
 
+from os.path import join, dirname
+from dotenv import load_dotenv
+
 if __name__ == "__main__":
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "tutorial.settings")
     try:
@@ -19,4 +22,11 @@ if __name__ == "__main__":
                 "forget to activate a virtual environment?"
             )
         raise
+
+    # Reads the key,value pair from .env and adds them to environment variable
+    # never include .env in version control
+    dotenv_path = join(dirname(__file__), '.env')
+    load_dotenv(dotenv_path)
+
+    # execute command
     execute_from_command_line(sys.argv)

@@ -22,11 +22,16 @@ PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '7w^j910(mc$4sk6aui^#@2xr%xspzz6*7x=lc#bb6%56$hf$1)'
+# The secret key must be a large random value and it must be kept secret.
+try:
+    SECRET_KEY = os.environ['SECRET_KEY']
+    # print('SECRET_KEY: ' + SECRET_KEY)
+except KeyError:
+    raise Exception('Please set the environment variable SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
+DEBUG = os.environ.get('DEBUG') == 'True'
+# print('DEBUG: ' + str(DEBUG))
 
 # Application definition
 
@@ -44,14 +49,28 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_swagger',
     'rest_framework_docs',
+    'oauth2_provider',
+    'corsheaders',
     'snippets.apps.SnippetsConfig',
     'experiments.apps.ExperimentsConfig',
+    'apiAdmin.apps.ApiAdminConfig',
+]
+
+AUTHENTICATION_BACKENDS = [
+    'oauth2_provider.backends.OAuth2Backend',
+    # Uncomment following if you want to access the admin
+    'django.contrib.auth.backends.ModelBackend',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
+    # If you use SessionAuthenticationMiddleware, be sure it appears before OAuth2TokenMiddleware.
+    # SessionAuthenticationMiddleware is NOT required for using
+    # django-oauth-toolkit.
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'oauth2_provider.middleware.OAuth2TokenMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -60,12 +79,14 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+CORS_ORIGIN_ALLOW_ALL = True
+
 ROOT_URLCONF = 'tutorial.urls'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates/')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -87,12 +108,16 @@ WSGI_APPLICATION = 'tutorial.wsgi.application'
 
 """
 # How to set the default DB connection
-'ENGINE': 'django.db.backends.', # Add 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-'NAME': '',                      # DB name or path to database file if using sqlite3.
+# Add 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+'ENGINE': 'django.db.backends.',
+# DB name or path to database file if using sqlite3.
+'NAME': '',
 # The following settings are not used with sqlite3:
 'USER': '',
 'PASSWORD': '',
-'HOST': '',                      # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
+# Empty for localhost through domain sockets or '127.0.0.1' for localhost
+# through TCP.
+'HOST': '',
 'PORT': '',                      # Set to empty string for default.
 """
 
@@ -139,9 +164,9 @@ USE_TZ = True
 # Update database configuration with $DATABASE_URL.
 # in production, set env variable DATABASE_URL = "postgres://user:password@host:port/database"
 # dj_database_url.config(default='postgres://user:password@host:port/database')
-db_from_env = dj_database_url.config(default='postgres://Django:django@localhost/django_test',
-                                     conn_max_age=500)
+db_from_env = dj_database_url.config(conn_max_age=500)
 DATABASES['default'].update(db_from_env)
+print('Database Engine: ' + DATABASES['default']['ENGINE'])
 
 # Honor the 'X-Forwarded-Proto' header for request.is_secure()
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
@@ -167,17 +192,39 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # https://django-rest-swagger.readthedocs.io/en/latest/settings/
 SWAGGER_SETTINGS = {
+    'USE_SESSION_AUTH': False,
     'SECURITY_DEFINITIONS': {
-        'basic': {
-            'type': 'basic'
-        }
+        # 'basic': {
+        #     'type': 'basic'
+        # },
+        'api_key': {
+            'type': 'apiKey',
+            'in': 'header',
+            'name': 'Authorization'
+        },
     },
+    'SHOW_REQUEST_HEADERS': True,
+    'JSON_EDITOR': True,
+    'DOC_EXPANSION': None,
+    "exclude_namespaces": ["swagger_view"],
 }
 
 LOGIN_URL = 'rest_framework:login'
 LOGOUT_URL = 'rest_framework:logout'
+LOGIN_REDIRECT_URL = '/'
 
 # http://www.django-rest-framework.org/tutorial/5-relationships-and-hyperlinked-apis/
 REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'oauth2_provider.ext.rest_framework.OAuth2Authentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
     'PAGE_SIZE': 10
+}
+
+OAUTH2_PROVIDER = {
+    # this is the list of available scopes
+    'SCOPES': {'read': 'Read scope', 'write': 'Write scope', 'groups': 'Access to your groups'}
 }

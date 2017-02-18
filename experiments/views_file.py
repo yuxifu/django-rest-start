@@ -8,7 +8,8 @@ from django.conf import settings
 from wsgiref.util import FileWrapper
 
 from rest_framework import status
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework import permissions
 
 # Create your views here.
 
@@ -29,15 +30,18 @@ def get_file_http_response(file, guess_type, attachment):
 
 
 @api_view(['GET'])
+@permission_classes((permissions.IsAuthenticatedOrReadOnly,))
 def pdf(request):
     return get_file_http_response('sample.pdf', True, True)
 
 
 @api_view(['GET'])
+@permission_classes((permissions.IsAuthenticatedOrReadOnly,))
 def zip(request):
     return get_file_http_response('sample.zip', True, True)
 
 
 @api_view(['GET'])
+@permission_classes((permissions.IsAuthenticatedOrReadOnly,))
 def jpeg(request):
     return get_file_http_response('sample.jpeg', True, False)

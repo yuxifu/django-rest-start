@@ -11,6 +11,7 @@ from snippets.models import Snippet
 from snippets.serializers import SnippetSerializer
 from security.permissions import IsOwnerOrReadOnly
 
+
 class JSONResponse(HttpResponse):
     """
     An HttpResponse that renders its content into JSON.
@@ -29,7 +30,8 @@ def snippet_list(request):
     """
     if request.method == 'GET':
         snippets = Snippet.objects.all()
-        serializer = SnippetSerializer(snippets, context={'request': request}, many=True)
+        serializer = SnippetSerializer(
+            snippets, context={'request': request}, many=True)
         return JSONResponse(serializer.data)
 
     elif request.method == 'POST':
@@ -57,7 +59,8 @@ def snippet_detail(request, pk):
 
     elif request.method == 'PUT':
         data = JSONParser().parse(request)
-        serializer = SnippetSerializer(snippet, context={'request': request}, data=data)
+        serializer = SnippetSerializer(
+            snippet, context={'request': request}, data=data)
         if serializer.is_valid():
             serializer.save()
             return JSONResponse(serializer.data)
