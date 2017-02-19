@@ -4,19 +4,9 @@ from rest_framework.routers import DefaultRouter, SimpleRouter
 
 from experiments import views_calculator
 from experiments import views_file
-from experiments import views_user_group
-
-router = SimpleRouter()
-router.register(r'users', views_user_group.UserViewSet)
-router.register(r'groups', views_user_group.GroupViewSet)
-
-# API endpoints for UserViewSet and GroupViewSet
-urlpatterns = [
-    url(r'^experiments/', include(router.urls)),
-]
 
 # More API endpoints
-urlpatterns += [
+urlpatterns = [
     # Calulator
     url(r'^experiments/calculator/add/(?P<numbers>.*)/$',
         views_calculator.add),

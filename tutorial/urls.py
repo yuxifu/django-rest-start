@@ -34,7 +34,7 @@ schema_view = get_schema_view(title='Amazing API')
 # Routers provide an easy way of automatically determining the URL conf
 # router = routers.DefaultRouter()
 
-# OAuth2 provider endpoints
+# OAuth2 provider endpoints: if want turn off some endpoints in production 
 oauth2_endpoint_views = [
     url(r'^authorize/$', oauth2_views.AuthorizationView.as_view(), name="authorize"),
     url(r'^token/$', oauth2_views.TokenView.as_view(), name="token"),
@@ -74,8 +74,8 @@ urlpatterns = [
                                namespace='rest_framework')),
 
     # django-oauth-toolkit, oauth2
-    # url(r'^o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
-    url(r'^o/', include(oauth2_endpoint_views, namespace="oauth2_provider")),
+    url(r'^o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
+    # url(r'^o/', include(oauth2_endpoint_views, namespace="oauth2_provider")),
 
     # https://django-rest-swagger.readthedocs.io/en/latest/
     url(r'^swagger/$', swagger_view, name='swagger-root'),
