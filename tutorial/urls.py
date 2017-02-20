@@ -25,22 +25,20 @@ import oauth2_provider.views as oauth2_views
 
 # from .swagger import SwaggerSchemaView
 
-swagger_view = get_swagger_view(title='Amazing API')
+swagger_view = get_swagger_view(title=settings.API_NAME)
 # custom swagger_view
 # swagger_view = SwaggerSchemaView.as_view()
 
-schema_view = get_schema_view(title='Amazing API')
+schema_view = get_schema_view(title=settings.API_NAME)
 
-# Routers provide an easy way of automatically determining the URL conf
-# router = routers.DefaultRouter()
-
-# OAuth2 provider endpoints: if want turn off some endpoints in production 
+# OAuth2 provider endpoints: public interface
 oauth2_endpoint_views = [
     url(r'^authorize/$', oauth2_views.AuthorizationView.as_view(), name="authorize"),
     url(r'^token/$', oauth2_views.TokenView.as_view(), name="token"),
     url(r'^revoke-token/$', oauth2_views.RevokeTokenView.as_view(), name="revoke-token"),
 ]
 
+#  OAuth2 provider endpoints: DEBUG mode only. Can be accessed in Admin Panel
 if settings.DEBUG:
     # OAuth2 Application Management endpoints
     oauth2_endpoint_views += [
@@ -58,6 +56,8 @@ if settings.DEBUG:
             name="authorized-token-delete"),
     ]
 
+# Routers provide an easy way of automatically determining the URL conf
+# router = routers.DefaultRouter()
 
 urlpatterns = [
     #
@@ -65,9 +65,6 @@ urlpatterns = [
 
     # admin views
     url(r'^admin/', admin.site.urls),
-
-    # account views
-    url(r'^accounts/', include('django.contrib.auth.urls')),
 
     # http://www.django-rest-framework.org/tutorial/4-authentication-and-permissions/
     url(r'^api-auth/', include('rest_framework.urls',
