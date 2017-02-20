@@ -17,7 +17,7 @@ urlpatterns = [
     url(r'^administration/', include(router.urls)),
 
     # Token
-    url(r'^administration/token/?$', views_oauth2.tokenView.as_view(), name="token"),
+    url(r'^administration/token/?$', views_oauth2.tokenView.as_view(), name="access-token"),
 
     # sign up end point
     url(r'^administration/signup/$', views.SignUp.as_view(), name="sign-up"),
