@@ -1,3 +1,6 @@
+# django-rest-start-oauth2
+A comprehensive django RESTful API using django-oauth-toolkit, swagger etc.
+
 # Django REST framework tutorial project
 
 A starter project template to build a robust RESTful Web API using [Django REST framework](http://www.django-rest-framework.org/) .
